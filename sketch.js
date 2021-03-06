@@ -5,14 +5,17 @@ const Constraint = Matter.Constraint;
 
 
 
-var engine,world
+var engine,world,ballIMG
+var slingReleased = 0;
 function preload(){
-
+ballIMG  = loadImage("polygon.png")
 }
 function setup(){
     var canvas = createCanvas(1000,500)
     engine = Engine.create()
     world = engine.world;
+
+    
    
     //layer1
     block1 = new Block(200,200,1,1);
@@ -32,8 +35,14 @@ function setup(){
     block10 = new Block(300,0,1,1);
     block11 = new Block(350,0,1,1);
 
+    ball = Bodies.circle(50,400,20);
+    World.add(world,ball);
+
     ground1 = new Ground(500,500,1000,100);
+
     base = new Ground(200,400,500,100);
+
+    sling = new rope(this.ball,{x:50, y:50});
     
 }
 
@@ -54,6 +63,21 @@ function draw(){
     block10.display();
     block11.display();
     block12.display();
-
-    text("Drag the hexagonal stone, and then release it",500,250);
+    
+    sling.display();
+    image(ballIMG,ball.position.x,ball.position.y,20,20)
+    text("Drag the hexagonal stone, and then release it",200,250);
+    
+}
+function mouseDragged(){
+    if(slingReleased == 0){
+        Matter.Body.setPosition(this.ball,{x:mouseX,y:mouseY});
+    }
+    
+    
+}
+function mouseReleased(){
+if(slingReleased ==0){
+    sling.fly();
+}
 }
